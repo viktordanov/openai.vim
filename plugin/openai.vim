@@ -5,6 +5,6 @@ endif
 let g:loaded_openai = 1
 
 " Map <leader>o to openai#Complete.
-nnoremap <leader>o :call openai#Complete()<CR>
+xnoremap <leader>o :call openai#Complete()<CR>
 
 command! -nargs=0 OpenAIComplete call openai#Complete()
