@@ -32,7 +32,7 @@ function! openai#Complete()
 	let openai_api_key = $OPENAI_API_KEY
 	" escape quotes, brackets, backslashes, tabs, slashes, and newlines
 	let text = trim(text)
-	let text = substitute(text, "'", "\\'", 'g')
+	let text = substitute(text, "'", "\'", 'g')
 	let text = substitute(text, '"', '\\"', 'g')
 	let text = substitute(text, '[', '\\[', 'g')
 	let text = substitute(text, ']', '\\]', 'g')
