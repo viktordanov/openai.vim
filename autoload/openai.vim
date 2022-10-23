@@ -30,7 +30,7 @@ function! openai#Complete()
 
 	" Curl the OpenAI API and pipe the result to jq.
 	let openai_api_key = $OPENAI_API_KEY
-	let formatted_text = substitute(substitute(trim(text), '"', '\"', 'g'), "'", "\\'", 'g')
+	let formatted_text = substitute(substitute(trim(text), '"', '\"', 'g'), "'", "''", 'g')
 	" escape single quotes
 	
 
