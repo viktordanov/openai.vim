@@ -39,14 +39,11 @@ function! openai#Complete()
 	let text = substitute(text, ')', '\\)', 'g')
 	let text = substitute(text, '{', '\\{', 'g')
 	let text = substitute(text, '}', '\\}', 'g')
-	let text = substitute(text, '\\', '\\\\', 'g')
-	let text = substitute(text, '\t', '\\t', 'g')
-	let text = substitute(text, '/', '\\/', 'g')
-	let text = substitute(text, '\n', '\\n', 'g')
+	let text = substitute(text, '\', '\\', 'g')
 
 	let text = substitute(text, "'", "\\'", 'g')
 
-	let curl_command = 'curl -sSL -H "Content-Type: application/json" -H "Authorization: Bearer ' . openai_api_key . '" -d "{\\"prompt\\": \\"' . text . '\\", \\"max_tokens\\": 50, \\"model\\": \\"text-davinci-002\\" }" https://api.openai.com/v1/completions'
+	let curl_command = 'curl -sSL -H "Content-Type: application/json" -H "Authorization: Bearer ' . openai_api_key . '" -d "{\"prompt\": \"' . text . '\", \"max_tokens\": 50, \"model\": \"text-davinci-002\" }" https://api.openai.com/v1/completions'
 
 	let curl_output = trim(system(curl_command))
 	let curl_output = substitute(curl_output, "'", "\\'", 'g')
