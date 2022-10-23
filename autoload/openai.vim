@@ -32,7 +32,7 @@ function! openai#Complete()
 	let openai_api_key = $OPENAI_API_KEY
 	" escape quotes, brackets, backslashes, tabs, slashes, and newlines
 	let text = trim(text)
-	let text = substitute(text, '"', '\\"', 'g')
+	let text = substitute(text, '"', "\\\\"', 'g')
 	let text = substitute(text, '[', '\\[', 'g')
 	let text = substitute(text, ']', '\\]', 'g')
 	let text = substitute(text, '(', '\\(', 'g')
@@ -44,7 +44,7 @@ function! openai#Complete()
 	let text = substitute(text, '/', '\\/', 'g')
 	let text = substitute(text, '\n', '\\n', 'g')
 
-	let text = substitute(text, "'", "\\\\'", 'g')
+	let text = substitute(text, "'", "\\'", 'g')
 
 	let curl_command = 'curl -sSL -H "Content-Type: application/json" -H "Authorization: Bearer ' . openai_api_key . '" -d "{\\"prompt\\": \\"' . text . '\\", \\"max_tokens\\": 50, \\"model\\": \\"text-davinci-002\\" }" https://api.openai.com/v1/completions'
 
