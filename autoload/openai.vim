@@ -36,10 +36,9 @@ function! openai#Complete()
 	let command = "curl -s -H 'Authorization: Bearer " . openai_api_key . "' -H 'Content-Type: application/json' -d '{\"prompt\": \"" . text . "\", \"max_tokens\": 64, \"temperature\": 0.5, \"top_p\": 1, \"frequency_penalty\": 0, \"presence_penalty\": 0, \"stop\": [\"\\n\", \"\\n\\n\"], \"model\": \"text-davinci-002\"}' https://api.openai.com/v1/completions | jq -r '.choices[0].text'"
 
 	let curl_output = trim(system(command))
-	let output = trim(curl_output)
-
+	system("notify-send 'OpenAI Complete' '" . curl_output . "'")
 	" Append the text back to the selection or current line.
-	call append(end_line, split(output, "\n"))
+	call append(end_line, split(curl_output, "\n"))
 endfunction
 
 " GetVisualSelection returns the text in a visual selection.
