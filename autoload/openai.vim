@@ -30,9 +30,10 @@ function! openai#Complete()
 
 	" Curl the OpenAI API and pipe the result to jq.
 	let openai_api_key = $OPENAI_API_KEY
-	let formatted_text = trim(substitute(substitute(text, '"', '\"', 'g'), "'", "\\'", 'g'))
+	let formatted_text = substitute(substitute(trim(text), '"', '\"', 'g'), "'", "\\'", 'g')
+	" escape single quotes
+	
 
-	" use jo and curl --json @- to avoid escaping issues
 	let command = "jo -p prompt='" . formatted_text . "' max_tokens=64 temperature=0.6 top_p=1.0 frequency_penalty=0.0 presence_penalty=0.0 model=text-davinci-002 | curl --silent --header 'Content-Type: application/json' --header 'Authorization: Bearer " . openai_api_key . "' --json @- https://api.openai.com/v1/completions | jq -r '.choices[0].text'"
 
 	let curl_output = trim(system(command))
