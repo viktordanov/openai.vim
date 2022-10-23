@@ -32,11 +32,12 @@ function! openai#Complete()
 	let openai_api_key = $OPENAI_API_KEY
 	let text = trim(text)
 	let text = substitute(text, '"', '\"', 'g')
-	let text = substitute(text, "'", "\'", 'g')
-	let command = "curl -s -H 'Authorization: Bearer " . openai_api_key . "' -H 'Content-Type: application/json' -d '{\"prompt\": \"" . text . "\", \"max_tokens\": 64, \"temperature\": 0.5, \"top_p\": 1, \"frequency_penalty\": 0, \"presence_penalty\": 0, \"stop\": [\"\\n\", \"\\n\\n\"], \"model\": \"text-davinci-002\"}' https://api.openai.com/v1/completions | jq -r '.choices[0].text'"
+	let text = substitute(text, "'", "\\'", 'g')
+
+	" use jo and curl --json @- to avoid escaping issues
+	let command = "jo -p prompt='" . text . "' max_tokens=64 temperature=0.6 top_p=1.0 frequency_penalty=0.0 presence_penalty=0.0 model=text-davinci-002 | curl --silent --header 'Content-Type: application/json' --header 'Authorization: Bearer " . openai_api_key . "' --json @- https://api.openai.com/v1/completions | jq -r '.choices[0].text'"
 
 	let curl_output = trim(system(command))
-	system("notify-send 'OpenAI Complete' '" . curl_output . "'")
 	" Append the text back to the selection or current line.
 	call append(end_line, split(curl_output, "\n"))
 endfunction
