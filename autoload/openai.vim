@@ -30,24 +30,13 @@ function! openai#Complete()
 
 	" Curl the OpenAI API and pipe the result to jq.
 	let openai_api_key = $OPENAI_API_KEY
-	" escape quotes, brackets, backslashes, tabs, slashes, and newlines
 	let text = trim(text)
-	let text = substitute(text, '"', '\\\\"', 'g')
-	let text = substitute(text, '[', '\\[', 'g')
-	let text = substitute(text, ']', '\\]', 'g')
-	let text = substitute(text, '(', '\\(', 'g')
-	let text = substitute(text, ')', '\\)', 'g')
-	let text = substitute(text, '{', '\\{', 'g')
-	let text = substitute(text, '}', '\\}', 'g')
-	let text = substitute(text, '\', '\\', 'g')
+	let text = substitute(text, '"', '\"', 'g')
+	let text = substitute(text, "'", "\'", 'g')
+	let command = "curl -s -H 'Authorization: Bearer " . openai_api_key . "' -H 'Content-Type: application/json' -d '{\"prompt\": \"" . text . "\", \"max_tokens\": 64, \"temperature\": 0.5, \"top_p\": 1, \"frequency_penalty\": 0, \"presence_penalty\": 0, \"stop\": [\"\\n\", \"\\n\\n\"], \"model\": \"text-davinci-002\"}' https://api.openai.com/v1/completions | jq -r '.choices[0].text'"
 
-	let text = substitute(text, "'", "\\'", 'g')
-
-	let curl_command = 'curl -sSL -H "Content-Type: application/json" -H "Authorization: Bearer ' . openai_api_key . '" -d "{\"prompt\": \"' . text . '\", \"max_tokens\": 50, \"model\": \"text-davinci-002\" }" https://api.openai.com/v1/completions'
-
-	let curl_output = trim(system(curl_command))
-	let curl_output = substitute(curl_output, "'", "\\'", 'g')
-	let output = trim(system("echo '" . curl_output . "' | jq --raw-output .choices[0].text"))
+	let curl_output = trim(system(command))
+	let output = trim(curl_output)
 
 	" Append the text back to the selection or current line.
 	call append(end_line, split(output, "\n"))
